@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "public/workbench-mobile.html", "use": "@vercel/static" },
+    { "src": "public/workbench-desktop.html", "use": "@vercel/static" },
+    { "src": "public/manifest.json", "use": "@vercel/static" },
+    { "src": "public/sw.js", "use": "@vercel/static" },
+    { "src": "public/icon-512.jpg", "use": "@vercel/static" },
+    { "src": "assets/greet-banner.jpg", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/mobile", "dest": "/public/workbench-mobile.html" },
+    { "src": "/desktop", "dest": "/public/workbench-desktop.html" },
+    { "src": "/manifest.json", "dest": "/public/manifest.json" },
+    { "src": "/sw.js", "dest": "/public/sw.js" },
+    { "src": "/icon-512.jpg", "dest": "/public/icon-512.jpg" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/public/$1" }
+  ]
+}
