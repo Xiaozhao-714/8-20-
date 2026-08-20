@@ -1,19 +1,15 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "public/**", "use": "@vercel/static" },
-    { "src": "assets/**", "use": "@vercel/static" }
+  "rewrites": [
+    { "source": "/", "destination": "/workbench-mobile.html" },
+    { "source": "/mobile", "destination": "/workbench-mobile.html" },
+    { "source": "/desktop", "destination": "/workbench-desktop.html" }
   ],
-  "routes": [
-    { "src": "/", "dest": "/public/workbench-mobile.html" },
-    { "src": "/mobile", "dest": "/public/workbench-mobile.html" },
-    { "src": "/desktop", "dest": "/public/workbench-desktop.html" },
-    { "src": "/manifest.json", "dest": "/public/manifest.json" },
-    { "src": "/sw.js", "dest": "/public/sw.js" },
-    { "src": "/icon-512.jpg", "dest": "/public/icon-512.jpg" },
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
+    }
   ]
 }
