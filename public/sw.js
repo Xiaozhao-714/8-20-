@@ -1,45 +1,5 @@
-// Service Worker — 离线缓存 App 外壳
-const CACHE_NAME = 'workbench-v4';
-const ASSETS = [
-  '/',
-  '/mobile',
-  '/desktop',
-  '/manifest.json',
-  '/sw.js',
-  '/icon-512.jpg',
-  '/assets/greet-banner.jpg',
-];
-
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS).catch(() => {}))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', (e) => {
-  // API 请求不走缓存
-  if (e.request.url.includes('/api/')) return;
-  // 其余请求：缓存优先，网络兜底
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      return cached || fetch(e.request).then(res => {
-        // 成功的请求才缓存
-        if (res.ok && e.request.method === 'GET') {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => cached)
-    })
-  );
-});
+const CACHE_NAME = 'workbench-v5';
+const ASSETS = ['./','./workbench-mobile.html','./workbench-desktop.html','./manifest.json','./sw.js','./icon-new.jpg','./icon-512.jpg'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE_NAME).map(x=>caches.delete(x)))));self.clients.claim();});
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(u.origin!==self.location.origin)return;e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{if(r.ok&&e.request.method==='GET'){const cl=r.clone();caches.open(CACHE_NAME).then(ca=>ca.put(e.request,cl));}return r;}).catch(()=>c)));});
